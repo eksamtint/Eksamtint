@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us | EKSAM TINT & STICKERS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: #0a0a0a;
+      font-family: 'Poppins', sans-serif;
+    }
+    .neon-box {
+      background: #111;
+      border: 2px solid #ff0000;
+      border-radius: 12px;
+      box-shadow: 0 0 10px #ff0000, 0 0 30px #ff7300;
+      padding: 20px;
+    }
+    .neon-input {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: 2px solid #ff0000;
+      background: black;
+      color: white;
+      box-shadow: 0 0 5px #ff0000, 0 0 10px #ff7300;
+      transition: 0.3s;
+    }
+    .neon-input:focus {
+      outline: none;
+      box-shadow: 0 0 15px #ff0000, 0 0 30px #ff7300;
+    }
+    .neon-btn {
+      background: black;
+      border: 2px solid #ff0000;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 0 10px #ff0000, 0 0 20px #ff7300;
+    }
+    .neon-btn:hover {
+      background: #ff0000;
+      color: black;
+      box-shadow: 0 0 20px #ff0000, 0 0 40px #ff7300;
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+
+  <div class="w-full max-w-lg neon-box">
+    <h1 class="text-3xl font-bold text-center text-red-500 mb-6">Get in Touch With Us</h1>
+    <form id="contactForm">
+      <input type="text" name="name" placeholder="Your Name" class="neon-input" required>
+      <input type="email" name="email" placeholder="Your Email" class="neon-input" required>
+      <input type="text" name="phone" placeholder="Phone Number" class="neon-input">
+      <textarea name="message" rows="5" placeholder="Your Message" class="neon-input" required></textarea>
+      <button type="submit" class="neon-btn w-full mt-4">Send Message</button>
+    </form>
+    <p id="statusMessage" class="text-center text-green-400 mt-4 hidden">✅ Message Sent Successfully!</p>
+  </div>
+
+  <!-- EmailJS Script -->
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2/dist/email.min.js"></script>
+  <script>
+    (function(){
+      emailjs.init("YOUR_PUBLIC_KEY"); // 🔹 Replace with your EmailJS Public Key
+    })();
+
+    document.getElementById("contactForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      emailjs.sendForm("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", this)
+        .then(function() {
+          document.getElementById("statusMessage").classList.remove("hidden");
+        }, function(error) {
+          alert("❌ Failed to send. Error: " + JSON.stringify(error));
+        });
+    });
+  </script>
+  
+</body>
+</html>

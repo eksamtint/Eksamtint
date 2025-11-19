@@ -1,0 +1,175 @@
+      <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Booking | EKSAM TINT & STICKERS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .fade-in { animation: fadeIn 1s ease-in-out forwards; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .glow {
+      animation: glow 2s infinite alternate;
+    }
+    @keyframes glow {
+      from { text-shadow: 0 0 5px #f87171, 0 0 10px #f87171; }
+      to { text-shadow: 0 0 15px #f87171, 0 0 25px #f87171; }
+    }
+  </style>
+</head>
+<body class="bg-black text-white font-sans">
+
+  <!-- Header -->
+  <header class="fixed top-0 left-0 w-full z-50 bg-black/80 backdrop-blur-md shadow-lg">
+    <div class="flex items-center justify-between px-4 py-4">
+      <h1 class="text-xl md:text-2xl font-bold text-red-500">EKSAM TINT</h1>
+      <nav class="hidden md:flex space-x-6 font-semibold">
+        <a href="index.html" class="hover:text-red-400 transition">Home</a>
+        <a href="about.html" class="hover:text-red-400 transition">About</a>
+        <a href="gallery.html" class="hover:text-red-400 transition">Gallery</a>
+        <a href="booking.html" class="text-red-500">Booking</a>
+        <a href="contact.html" class="hover:text-red-400 transition">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="h-[40vh] bg-cover bg-center flex items-center justify-center" style="background-image: url('images/1198387.png');">
+    <h2 class="text-4xl md:text-5xl font-bold text-red-500 fade-in glow">Book Your Appointment</h2>
+  </section>
+
+  <!-- Booking Form -->
+  <section class="py-16 px-6 md:px-20">
+    <h3 class="text-3xl md:text-4xl font-bold text-center mb-8 text-red-400">Fill Out the Form</h3>
+    
+    <form id="bookingForm" class="max-w-2xl mx-auto bg-gray-900/80 p-8 rounded-2xl shadow-lg space-y-6 fade-in">
+      <input type="hidden" name="access_key" value="877bfeb6-8dce-4b84-a9f6-23c6d35fc948">
+
+      <!-- Name -->
+      <div>
+        <label class="block mb-2 font-semibold">Full Name</label>
+        <input type="text" name="name" required class="w-full p-3 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="Your Name">
+      </div>
+      
+      <!-- Email -->
+      <div>
+        <label class="block mb-2 font-semibold">Email</label>
+        <input type="email" name="email" required class="w-full p-3 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="your@email.com">
+      </div>
+
+      <!-- Date -->
+      <div>
+        <label class="block mb-2 font-semibold">Preferred Date</label>
+        <input type="date" name="date" required class="w-full p-3 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-red-500">
+      </div>
+
+      <!-- Time Slot -->
+      <div>
+        <label class="block mb-2 font-semibold">Preferred Time</label>
+        <select name="time" required class="w-full p-3 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-red-500">
+          <option value="">Select a Time Slot</option>
+          <option>09:00 AM - 11:00 AM</option>
+          <option>11:00 AM - 01:00 PM</option>
+          <option>01:00 PM - 03:00 PM</option>
+          <option>03:00 PM - 05:00 PM</option>
+          <option>05:00 PM - 07:00 PM</option>
+        </select>
+      </div>
+
+      <!-- Service -->
+      <div>
+        <label class="block mb-2 font-semibold">Service</label>
+        <select name="service" required class="w-full p-3 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-red-500">
+          <option value="">Select a Service</option>
+          <option>Window Tinting</option>
+          <option>Stickers & Signage</option>
+          <option>Headlight Tinting</option>
+          <option>Chameleon Tint</option>
+          <option>Window Screening</option>
+          <option>Car Wrapping</option>
+          <option>Full Package</option>
+        </select>
+      </div>
+
+      <!-- Message -->
+      <div>
+        <label class="block mb-2 font-semibold">Additional Message</label>
+        <textarea name="message" rows="4" class="w-full p-3 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="Any special requests..."></textarea>
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex flex-col md:flex-row gap-4">
+        <button type="button" onclick="sendToEmail()" class="w-full py-3 bg-red-600 hover:bg-red-700 rounded-lg font-semibold transition">
+          ✅ Submit Booking (Email)
+        </button>
+        <button type="button" onclick="sendToSMS()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition">
+          📩 Send via SMS
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Back Button -->
+  <section class="text-center py-10">
+    <a href="index.html" class="px-6 py-3 bg-gray-700 hover:bg-gray-800 rounded-lg font-semibold transition inline-block">
+      ⬅ Back to Home
+    </a>
+  </section>
+
+  <!-- JavaScript -->
+  <script>
+    function getFormData() {
+      return {
+        name: document.querySelector('input[name="name"]').value.trim(),
+        email: document.querySelector('input[name="email"]').value.trim(),
+        date: document.querySelector('input[name="date"]').value.trim(),
+        time: document.querySelector('select[name="time"]').value.trim(),
+        service: document.querySelector('select[name="service"]').value.trim(),
+        message: document.querySelector('textarea[name="message"]').value.trim()
+      };
+    }
+
+    // ✅ Send Email via Web3Forms
+    function sendToEmail() {
+      let form = document.getElementById("bookingForm");
+      let formData = new FormData(form);
+
+      fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert("✅ Booking sent to Email!");
+        } else {
+          alert("❌ Failed to send Email!");
+        }
+      })
+      .catch(err => alert("⚠️ Error: " + err));
+    }
+
+    // ✅ SMS + Email
+    function sendToSMS() {
+      let data = getFormData();
+      sendToEmail(); // also send email
+
+      let phone = "447774093433"; 
+      let text = `New Booking Request:
+Name: ${data.name}
+Email: ${data.email}
+Date: ${data.date}
+Time: ${data.time}
+Service: ${data.service}
+Message: ${data.message}`;
+
+      let url = "sms:" + phone + "?body=" + encodeURIComponent(text);
+      window.open(url, '_blank');
+    }
+  </script>
+
+</body>
+</html>

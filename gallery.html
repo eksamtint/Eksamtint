@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery | EKSAM TINT & STICKERS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Neon Box */
+    .neon-box {
+      border: 2px solid #ff0000;
+      box-shadow: 0 0 10px #ff0000, 0 0 20px #ff7300;
+      transition: all 0.4s ease-in-out;
+    }
+    .neon-box:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px #ff0000, 0 0 50px #ff7300;
+    }
+
+    /* Fade-in animation */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    .fade-in.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body class="bg-black text-white font-sans">
+
+  <!-- Header -->
+  <header class="fixed top-0 left-0 w-full z-50 bg-black/80 backdrop-blur-md shadow-lg">
+    <div class="flex items-center justify-between px-4 py-4">
+      <h1 class="text-xl md:text-2xl font-bold text-red-500">EKSAM TINT</h1>
+      <nav class="hidden md:flex space-x-6 font-semibold">
+        <a href="home.html" class="hover:text-red-400 transition">Home</a>
+        <a href="about.html" class="hover:text-red-400 transition">About</a>
+        <a href="gallery.html" class="text-red-500">Gallery</a>
+        <a href="booking.html" class="hover:text-red-400 transition">Booking</a>
+        <a href="contact.html" class="hover:text-red-400 transition">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Banner -->
+  <section class="h-[45vh] bg-cover bg-center flex items-center justify-center"
+           style="background-image: url('images/Bugatti-La-Voiture-Noire-Wallpaper-HD.png');">
+    <div class="bg-black/60 p-6 rounded-xl border-2 border-red-500 shadow-lg neon-box">
+      <h2 class="text-4xl md:text-5xl font-bold text-red-500 fade-in">Our Gallery</h2>
+    </div>
+  </section>
+
+  <!-- Gallery Grid -->
+  <section class="py-16 px-6 md:px-20">
+    <h3 class="text-3xl md:text-4xl font-bold text-center mb-8 text-red-400 fade-in">Our Work in Neon Frames</h3>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
+      <!-- 15 Images -->
+      <div class="neon-box rounded-xl overflow-hidden fade-in">
+        <img src="images/1198387.png" class="w-full h-40 object-cover cursor-pointer" onclick="openLightbox(this)">
+      </div>
+      <div class="neon-box rounded-xl overflow-hidden fade-in">
+        <img src="images/2127751.png" class="w-full h-40 object-cover cursor-pointer" onclick="openLightbox(this)">
+      </div>
+      <div class="neon-box rounded-xl overflow-hidden fade-in">
+        <img src="images/Bugatti-La-Voiture-Noire-Wallpaper-HD.png" class="w-full h-40 object-cover cursor-pointer" onclick="openLightbox(this)">
+      </div>
+      <div class="neon-box rounded-xl overflow-hidden fade-in">
+        <img src="images/WhatsApp Image 2025-09-03 at 12.17.29_314db216.png.jpg" class="w-full h-40 object-cover cursor-pointer" onclick="openLightbox(this)">
+      </div>
+      <div class="neon-box rounded-xl overflow-hidden fade-in">
+        <img src="images/WhatsApp Image 2025-09-03 at 12.17.29_445de735.png.jpg" class="w-full h-40 object-cover cursor-pointer" onclick="openLightbox(this)">
+      </div>
+      <div class="neon-box rounded-xl overflow-hidden fade-in">
+        <img src="images/WhatsApp Image 2025-09-03 at 12.17.29_472a9f63.png.jpg" class="w-full h-40 object-cover cursor-pointer" onclick="openLightbox(this)">
+      </div>
+      <div class="neon-box rounded-xl overflow-hidden fade-in">
+        <img src="images/WhatsApp Image 2025-09-03 at 12.17.29_912c8ac8.png.jpg" class="w-full h-40 object-cover cursor-pointer" onclick="openLightbox(this)">
+      </div>
+      <div class="neon-box rounded-xl overflow-hidden fade-in">
+        <img src="images/WhatsApp Image 2025-09-03 at 12.17.29_b40af758.png.jpg" class="w-full h-40 object-cover cursor-pointer" onclick="openLightbox(this)">
+      </div>
+      <div class="neon-box rounded-xl overflow-hidden fade-in">
+        <img src="images/WhatsApp Image 2025-09-03 at 12.17.29_c9ec4311.png.jpg" class="w-full h-40 object-cover cursor-pointer" onclick="openLightbox(this)">
+      </div>
+      <div class="neon-box rounded-xl overflow-hidden fade-in">
+        <img src="images/WhatsApp Image 2025-09-03 at 12.22.29_d22c623e.png.jpg" class="w-full h-40 object-cover cursor-pointer" onclick="openLightbox(this)">
+      </div>
+      <div class="neon-box rounded-xl overflow-hidden fade-in">
+        <img src="images/WhatsApp Image 2025-09-03 at 12.23.22_89c890e6.png.jpg" class="w-full h-40 object-cover cursor-pointer" onclick="openLightbox(this)">
+      </div>
+      <div class="neon-box rounded-xl overflow-hidden fade-in">
+        <img src="images/WhatsApp Image 2025-09-03 at 12.23.22_43048812.png.jpg" class="w-full h-40 object-cover cursor-pointer" onclick="openLightbox(this)">
+      </div>
+      <div class="neon-box rounded-xl overflow-hidden fade-in">
+        <img src="images/WhatsApp Image 2025-09-03 at 12.23.22_a305f695.png.jpg" class="w-full h-40 object-cover cursor-pointer" onclick="openLightbox(this)">
+      </div>
+      <div class="neon-box rounded-xl overflow-hidden fade-in">
+        <img src="images/WhatsApp Image 2025-09-03 at 12.23.22_b4bd835c.png.jpg" class="w-full h-40 object-cover cursor-pointer" onclick="openLightbox(this)">
+      </div>
+      <div class="neon-box rounded-xl overflow-hidden fade-in">
+        <img src="images/WhatsApp Image 2025-09-03 at 12.23.22_be289ae6.png.jpg" class="w-full h-40 object-cover cursor-pointer" onclick="openLightbox(this)">
+      </div>
+    </div>
+  </section>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="hidden fixed inset-0 bg-black/90 z-50 flex items-center justify-center">
+    <span class="absolute top-5 right-8 text-white text-4xl cursor-pointer" onclick="closeLightbox()">&times;</span>
+    <img id="lightbox-img" src="" class="max-h-[90vh] max-w-[90vw] rounded-lg shadow-xl">
+  </div>
+
+  <!-- Back Button -->
+  <section class="text-center py-10">
+    <a href="home.html" class="px-6 py-3 bg-gray-700 hover:bg-gray-800 rounded-lg font-semibold transition">⬅ Back to Home</a>
+  </section>
+
+  <script>
+    // Lightbox
+    function openLightbox(img) {
+      document.getElementById("lightbox").classList.remove("hidden");
+      document.getElementById("lightbox-img").src = img.src;
+    }
+    function closeLightbox() {
+      document.getElementById("lightbox").classList.add("hidden");
+    }
+
+    // Fade-in on scroll
+    const faders = document.querySelectorAll('.fade-in');
+    const appearOnScroll = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('show');
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.2 });
+
+    faders.forEach(el => { appearOnScroll.observe(el); });
+  </script>
+  <!-- CONTACT -->
+  <section id="contact" class="py-20 bg-gray-900">
+    <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 px-6 items-center">
+      <div data-aos="fade-right">
+        <h2 class="text-5xl font-bold mb-6">Contact Us</h2>
+        <p class="text-gray-300 mb-4">📍 33 Grasmere Road, Luton LU3 2DT</p>
+        <p class="text-gray-300 mb-4">📞 +44 7774 093433</p>
+        <p class="text-gray-300 mb-4">✉ info@eksamtint.com</p>
+      </div>
+      <div data-aos="fade-left">
+        <iframe src="https://www.google.com/maps?q=33+Grasmere+Road+Luton+LU3+2DT&output=embed"
+                class="w-full h-80 rounded-xl shadow-lg"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="py-6 bg-black text-center text-gray-500 text-sm">
+    © 2025 EKSAM TINT & STICKERS. All Rights Reserved.
+  </footer>
+
+  <script>
+    AOS.init({ duration: 1200 });
+  </script>
+</body>
+</html>

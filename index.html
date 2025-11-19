@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EKSAM TINT & STICKERS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <style>
+    
+   
+
+    .neon-text {
+      text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 40px #ff0000;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      background: linear-gradient(to bottom, #ff0000, #8a2be2);
+      transform: translateX(-50%);
+    }
+    .timeline-step {
+      position: relative;
+      width: 50%;
+      padding: 20px;
+    }
+    .timeline-step.left {
+      text-align: right;
+      left: 0;
+    }
+    .timeline-step.right {
+      left: 50%;
+    }
+    .timeline-step::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      width: 20px;
+      height: 20px;
+      background: #ff0000;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+    }
+    .timeline-step.left::before {
+      right: -10px;
+    }
+    .timeline-step.right::before {
+      left: -10px;
+
+    }
+    header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: black;       /* solid bg so text is clear */
+  color: white;
+  z-index: 9999;           /* 🚀 always in front */
+}
+  </style>
+</head>
+<body class="bg-black text-white font-sans">
+
+  <!-- NAVBAR -->
+<header class="absolute top-0 left-0 
+bg black/70 backdrop-blur-md text-white z-50">
+  <div class="container mx-auto flex items-center justify-between p-4">
+    
+    <!-- Logo -->
+    <a href="home.html" class="text-2xl font-extrabold tracking-wide">
+      EKSAM <span class="text-red-500">TINT</span>
+    </a>
+
+    <!-- Desktop Menu -->
+    <nav class="hidden md:flex space-x-8 text-lg font-medium">
+      <a href="index.html" class="hover:text-red-500 transition">Home</a>
+      <a href="about.html" class="hover:text-red-500 transition">About</a>
+      <a href="gallery.html" class="hover:text-red-500 transition">Gallery</a>
+      <a href="contact.html" class="hover:text-red-500 transition">Contact</a>
+      <a href="booking.html" class="hover:text-red-500 transition">Booking</a>
+    </nav>
+
+    <!-- Mobile Hamburger -->
+    <button id="menu-btn" class="md:hidden flex flex-col space-y-1 focus:outline-none">
+      <span class="w-6 h-0.5 bg-white"></span>
+      <span class="w-6 h-0.5 bg-white"></span>
+      <span class="w-6 h-0.5 bg-white"></span>
+    </button>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="hidden md:hidden bg-black/90 text-white flex flex-col space-y-6 text-center py-6">
+    <a href="index.html" class="hover:text-red-500 transition">Home</a>
+    <a href="about.html" class="hover:text-red-500 transition">About</a>
+    <a href="gallery.html" class="hover:text-red-500 transition">Gallery</a>
+    <a href="contact.html" class="hover:text-red-500 transition">Contact</a>
+    <a href="booking.html" class="hover:text-red-500 transition">Booking</a>
+  </div>
+</header>
+
+<script>
+  // Toggle mobile menu
+  const menuBtn = document.getElementById('menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+</script>
+  
+
+  <!-- HERO with Swiper Background -->
+<section class="relative h-[100vh]">
+  <!-- Swiper -->
+  <div class="swiper mySwiper h-full">
+    <div class="swiper-wrapper">
+      <!-- Slide 1 -->
+      <div class="swiper-slide relative">
+        <img src="images/1198387.png" class="absolute inset-0 w-full h-full object-cover brightness-50" alt="Tint Car 1">
+      </div>
+      <!-- Slide 2 -->
+      <div class="swiper-slide relative">
+        <img src="images/2127751.png" class="absolute inset-0 w-full h-full object-cover brightness-50" alt="Tint Car 2">
+      </div>
+      <!-- Slide 3 -->
+      <div class="swiper-slide relative">
+        <img src="images/Bugatti-La-Voiture-Noire-Wallpaper-HD.png" class="absolute inset-0 w-full h-full object-cover brightness-50" alt="Bugatti Car">
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlay -->
+  <div class="absolute inset-0 bg-black/50"></div>
+
+  <!-- Content -->
+  <div class="absolute inset-0 flex flex-col items-center justify-center text-center text-white z-10 px-6">
+    <h1 class="text-5xl md:text-7xl font-extrabold drop-shadow-lg">EKSAM TINT & STICKERS</h1>
+    <p class="mt-4 text-lg md:text-xl text-gray-200">Premium Window Tinting in Luton</p>
+    <a href="booking.html" class="mt-6 inline-block px-8 py-3 rounded-full bg-gradient-to-r from-red-600 to-purple-700 font-semibold hover:scale-105 transition">Book Now</a>
+  </div>
+</section>
+
+<!-- Swiper.js -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+
+<script>
+  var swiper = new Swiper(".mySwiper", {
+    loop: true,
+    autoplay: {
+      delay: 4000,
+      disableOnInteraction: false,
+    },
+    effect: "fade",
+    fadeEffect: { crossFade: true },
+  });
+</script>
+
+  <!-- WHAT WE DO -->
+<section class="py-16 px-6 md:px-20 bg-gradient-to-b from-black to-gray-900">
+  <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-red-500">What We Do</h2>
+
+  <!-- Horizontal Scroll -->
+  <div class="flex space-x-6 overflow-x-auto pb-6 snap-x snap-mandatory scrollbar-hide">
+    
+    <!-- Window Tinting -->
+    <div class="min-w-[280px] bg-gray-900 p-6 rounded-2xl shadow-lg hover:scale-105 transition snap-center">
+      <img src="images/tinting.png.png" alt="Window Tinting" 
+           class="w-full h-40 object-cover rounded-lg mb-4 border-2 border-red-500 shadow-[0_0_20px_#ff0000]">
+      <h3 class="text-xl font-bold mb-2 text-red-400">Window Tinting</h3>
+      <p class="text-gray-300 text-sm">Privacy, UV protection, & sleek style.</p>
+    </div>
+
+    <!-- Headlights & Taillights -->
+    <div class="min-w-[280px] bg-gray-900 p-6 rounded-2xl shadow-lg hover:scale-105 transition snap-center">
+      <img src="images/light.png.png" alt="Headlights & Taillights" 
+           class="w-full h-40 object-cover rounded-lg mb-4 border-2 border-red-500 shadow-[0_0_20px_#ff0000]">
+      <h3 class="text-xl font-bold mb-2 text-red-400">Headlights & Taillights</h3>
+      <p class="text-gray-300 text-sm">Sleek tinted lights for a bold look.</p>
+    </div>
+
+    <!-- Dechrome -->
+    <div class="min-w-[280px] bg-gray-900 p-6 rounded-2xl shadow-lg hover:scale-105 transition snap-center">
+      <img src="images/dechromes.png.jpg" alt="Dechrome" 
+           class="w-full h-40 object-cover rounded-lg mb-4 border-2 border-red-500 shadow-[0_0_20px_#ff0000]">
+      <h3 class="text-xl font-bold mb-2 text-red-400">Dechrome</h3>
+      <p class="text-gray-300 text-sm">Gloss black trims for a premium finish.</p>
+    </div>
+
+    <!-- Stickers & Signage -->
+    <div class="min-w-[280px] bg-gray-900 p-6 rounded-2xl shadow-lg hover:scale-105 transition snap-center">
+      <img src="images/sticker.png.png" alt="Stickers & Signage" 
+           class="w-full h-40 object-cover rounded-lg mb-4 border-2 border-red-500 shadow-[0_0_20px_#ff0000]">
+      <h3 class="text-xl font-bold mb-2 text-red-400">Stickers & Signage</h3>
+      <p class="text-gray-300 text-sm">Custom vinyls & branding solutions.</p>
+    </div>
+
+    <!-- Chameleon Tint -->
+    <div class="min-w-[280px] bg-gray-900 p-6 rounded-2xl shadow-lg hover:scale-105 transition snap-center">
+      <img src="images/WhatsApp Image 2025-09-03 at 12.23.22_43048812.png.jpg" alt="Chameleon Tint" 
+           class="w-full h-40 object-cover rounded-lg mb-4 border-2 border-red-500 shadow-[0_0_20px_#ff0000]">
+      <h3 class="text-xl font-bold mb-2 text-red-400">Chameleon Tint</h3>
+      <p class="text-gray-300 text-sm">Color-shifting glass tint for a unique luxury style.</p>
+    </div>
+
+    <!-- Window Screening -->
+    <div class="min-w-[280px] bg-gray-900 p-6 rounded-2xl shadow-lg hover:scale-105 transition snap-center">
+      <img src="images/house.png.jpg" alt="Window Screening" 
+           class="w-full h-40 object-cover rounded-lg mb-4 border-2 border-red-500 shadow-[0_0_20px_#ff0000]">
+      <h3 class="text-xl font-bold mb-2 text-red-400">Window tint for house/office</h3>
+      <p class="text-gray-300 text-sm">Heat reduction & UV protection for comfort & safety.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- Hide Scrollbar (Optional CSS) -->
+<style>
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
+<!-- Pricing Section -->
+<section class="py-20 px-6 md:px-20 bg-black text-white">
+  <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+
+    <!-- Pay-as-you-go -->
+    <div class="fade-up bg-gray-900/70 p-8 rounded-2xl shadow-lg transition transform hover:-translate-y-2 hover:shadow-blue-500/40 duration-500">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto mb-4 text-blue-400 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 17l6-6 4 4 8-8" />
+      </svg>
+      <h3 class="text-2xl font-bold mb-3 text-white">Pay-as-you-go</h3>
+      <p class="text-gray-300">Start for free. Every product has a meaningful free tier so you can sign up and build without friction.</p>
+      <div class="mt-6 text-blue-400 text-3xl font-extrabold"></div>
+    </div>
+
+    <!-- Volume discounts -->
+    <div class="fade-up bg-gray-900/70 p-8 rounded-2xl shadow-lg transition transform hover:-translate-y-2 hover:shadow-blue-500/40 duration-500 delay-150">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto mb-4 text-blue-400 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.4 15A7.962 7.962 0 0120 12a8 8 0 10-8 8 7.962 7.962 0 013-0.6" />
+      </svg>
+      <h3 class="text-2xl font-bold mb-3 text-white">Volume discounts</h3>
+      <p class="text-gray-300">As your usage grows, you’ll automatically get volume pricing. No negotiation necessary.</p>
+      <div class="mt-6 text-blue-400 text-3xl font-extrabold"></div>
+    </div>
+
+    <!-- Save when you commit -->
+    <div class="fade-up bg-gray-900/70 p-8 rounded-2xl shadow-lg transition transform hover:-translate-y-2 hover:shadow-blue-500/40 duration-500 delay-300">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto mb-4 text-blue-400 animate-spin-slow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0-1.105-.895-2-2-2s-2 .895-2 2 .895 2 2 2 2-.895 2-2-0.895-2-2-2z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16v12H4z" />
+      </svg>
+      <h3 class="text-2xl font-bold mb-3 text-white">Save when you commit</h3>
+      <p class="text-gray-300">Receive additional discounts for annual commitments.</p>
+      <div class="mt-6 text-blue-400 text-3xl font-extrabold"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Fade-up Animation CSS -->
+<style>
+  .fade-up {
+    opacity:0;
+    transform:translateY(40px);
+    transition:all 0.8s ease-out;
+  }
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  /* Slow spin for wallet icon */
+  .animate-spin-slow {
+    animation: spin 6s linear infinite;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+</style>
+
+<!-- Scroll Animation Script -->
+<script>
+  document.addEventListener("scroll", () => {
+    document.querySelectorAll(".fade-up").forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight - 100) {
+        el.classList.add("visible");
+      }
+    });
+  });
+</script>
+  <!-- 100% GUARANTEE -->
+  <section class="py-20 bg-black text-center">
+    <h2 class="text-5xl font-bold neon-text mb-12" data-aos="fade-up">100% Satisfaction Guarantee</h2>
+    <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto px-6">
+      <div class="bg-gray-900 p-6 rounded-xl shadow-xl" data-aos="zoom-in">
+        <h3 class="text-2xl font-semibold mb-2">All Car Makes</h3>
+        <p class="text-gray-400">We cover a wide variety of vehicles.</p>
+      </div>
+      <div class="bg-gray-900 p-6 rounded-xl shadow-xl" data-aos="zoom-in" data-aos-delay="200">
+        <h3 class="text-2xl font-semibold mb-2">Quality Service</h3>
+        <p class="text-gray-400">Top-quality materials and application.</p>
+      </div>
+      <div class="bg-gray-900 p-6 rounded-xl shadow-xl" data-aos="zoom-in" data-aos-delay="400">
+        <h3 class="text-2xl font-semibold mb-2">Experienced Staff</h3>
+        <p class="text-gray-400">20+ years of combined experience.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="work" class="py-20 bg-gray-900 relative">
+    <h2 class="text-5xl font-bold text-center mb-12" data-aos="fade-down">How It Works</h2>
+    <div class="relative max-w-5xl mx-auto px-6 timeline">
+      <div class="timeline-step left" data-aos="fade-right">
+        <h3 class="text-xl font-semibold">1. Book Appointment</h3>
+        <p class="text-gray-400">Choose your service & preferred time.</p>
+      </div>
+      <div class="timeline-step right" data-aos="fade-left">
+        <h3 class="text-xl font-semibold">2. Bring Your Car</h3>
+        <p class="text-gray-400">Bring your vehicle to our workshop.</p>
+      </div>
+      <div class="timeline-step left" data-aos="fade-right">
+        <h3 class="text-xl font-semibold">3. Professional Work</h3>
+        <p class="text-gray-400">Our experts apply tints with precision.</p>
+      </div>
+      <div class="timeline-step right" data-aos="fade-left">
+        <h3 class="text-xl font-semibold">4. Drive Away</h3>
+        <p class="text-gray-400">Enjoy your stylish & protected car.</p>
+      </div>
+    </div>
+  </section>
+
+<!-- Testimonials Section -->
+
+
+<!-- Testimonials Section -->
+<section class="py-20 px-6 md:px-20 bg-black text-white">
+  <h2 class="text-4xl font-bold text-center mb-12">Testimonials</h2>
+
+  <!-- Row 1 (Left to Right) -->
+  <div class="relative overflow-hidden mb-8">
+    <div class="flex animate-left-right space-x-6">
+      <div class="testimonial">"A really top guy, did the tinting on my merc estate at really short notice and did a great job on it. Thank you buddy" — Robert Chapman ⭐⭐⭐⭐⭐</div>
+      <div class="testimonial">"Amazing work, takes his time and does it properly. Highly recommend!" — Mohamed Shameer ⭐⭐⭐⭐⭐</div>
+      <div class="testimonial">"Incredibly professional and knowledgeable team. Couldn’t be happier." — Kofi Owusu ⭐⭐⭐⭐⭐</div>
+      <div class="testimonial">"Excellent quality tint, great value for money." — Vijay Kumar ⭐⭐⭐⭐⭐</div>
+    </div>
+  </div>
+
+  <!-- Row 2 (Right to Left) -->
+  <div class="relative overflow-hidden mb-8">
+    <div class="flex animate-right-left space-x-6">
+      <div class="testimonial">"Very professional and reasonably priced. High quality window tint." — Amy McKee ⭐⭐⭐⭐⭐</div>
+      <div class="testimonial">"Service exceptional. Booked within 15 minutes, car looks completely different." — Muzzy Zaman ⭐⭐⭐⭐⭐</div>
+      <div class="testimonial">"Super friendly, fast service, great price." — Fylo6 ⭐⭐⭐⭐⭐</div>
+      <div class="testimonial">"Great work, very professional. Tint fitted perfectly and on time." — Qasim Muhammad ⭐⭐⭐⭐⭐</div>
+    </div>
+  </div>
+
+  <!-- Row 3 (Left to Right again) -->
+  <div class="relative overflow-hidden">
+    <div class="flex animate-left-right space-x-6">
+      <div class="testimonial">"Amazing work, already done tints for my cars. Price competitive and top quality." — Adam Azaroual ⭐⭐⭐⭐⭐</div>
+      <div class="testimonial">"Arrived on time, excellent service, best price." — Cory Tuthill ⭐⭐⭐⭐⭐</div>
+      <div class="testimonial">"Good experience, thanks brother for my car window tint." — Arsh Sidhu ⭐⭐⭐⭐⭐</div>
+      <div class="testimonial">"Great job 👍 will be using him again for my conservatory." — Richard Liew ⭐⭐⭐⭐⭐</div>
+    </div>
+  </div>
+</section>
+
+<style>
+.testimonial {
+  background: #222;
+  padding: 20px;
+  border-radius: 10px;
+  min-width: 300px;
+  max-width: 350px;
+  font-size: 1rem;
+  line-height: 1.5;
+  flex-shrink: 0;
+}
+
+/* Left → Right */
+@keyframes scroll-lr {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.animate-left-right {
+  animation: scroll-lr 40s linear infinite;
+}
+
+/* Right → Left */
+@keyframes scroll-rl {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+.animate-right-left {
+  animation: scroll-rl 40s linear infinite;
+}
+</style>
+</style>
+  <!-- CONTACT -->
+  <section id="contact" class="py-20 bg-gray-900">
+    <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 px-6 items-center">
+      <div data-aos="fade-right">
+        <h2 class="text-5xl font-bold mb-6">Contact Us</h2>
+        <p class="text-gray-300 mb-4">📍 33 Grasmere Road, Luton LU3 2DT</p>
+        <p class="text-gray-300 mb-4">📞 +44 7774 093433</p>
+        <p class="text-gray-300 mb-4">✉ eksamtint@gmail.com</p>
+      </div>
+      <div data-aos="fade-left">
+        <iframe src="https://www.google.com/maps?q=33+Grasmere+Road+Luton+LU3+2DT&output=embed"
+                class="w-full h-80 rounded-xl shadow-lg"></iframe>
+      </div>
+    </div>
+  </section>
+<!-- Social Media Panel -->
+<!-- Social Media Panel -->
+<section class="py-12 bg-black text-white text-center">
+  <h2 class="text-3xl font-bold mb-6 animate-fade-in">Follow Us</h2>
+
+  <div class="flex justify-center space-x-8">
+    
+    <!-- TikTok -->
+    <a href="https://www.tiktok.com/@eksamtint?_t=ZN-8zbbGD8QxuA&_r=1" 
+       target="_blank" 
+       class="social-btn tiktok">
+      <i class="fab fa-tiktok text-2xl"></i>
+    </a>
+
+    <!-- Instagram -->
+    <a href="https://www.instagram.com/eksamtint.uk?igsh=eWM0a3JrNnZ1dmV0" 
+       target="_blank" 
+       class="social-btn instagram">
+      <i class="fab fa-instagram text-2xl"></i>
+    </a>
+
+    <!-- Facebook -->
+    <a href="https://www.facebook.com/share/1FDj6Qfy5m/" 
+       target="_blank" 
+       class="social-btn facebook">
+      <i class="fab fa-facebook-f text-2xl"></i>
+    </a>
+
+  </div>
+</section>
+
+<!-- ✅ Font Awesome (must be in <head>) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+/* Fade-in effect */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fadeIn 1.2s ease-in-out;
+}
+
+/* Base style for social buttons */
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  color: white;
+  transition: all 0.3s ease-in-out;
+  font-size: 24px;
+}
+
+/* Hover animation */
+.social-btn:hover {
+  transform: scale(1.2) rotate(5deg);
+  box-shadow: 0 0 20px rgba(255,255,255,0.6);
+}
+
+/* TikTok colors */
+.tiktok { background: #000; }
+.tiktok:hover { background: #ff0050; }
+
+/* Instagram gradient */
+.instagram { 
+  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+}
+.instagram:hover { opacity: 0.9; }
+
+/* Facebook colors */
+.facebook { background: #1877f2; }
+.facebook:hover { background: #0d65d9; }
+</style>
+  <!-- FOOTER -->
+  <footer class="py-6 bg-black text-center text-gray-500 text-sm">
+    © 2025 EKSAM TINT & STICKERS. All Rights Reserved.
+  </footer>
+
+  <script>
+    AOS.init({ duration: 1200 });
+  </script>
+</body>
+</html>

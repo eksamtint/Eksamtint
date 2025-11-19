@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About | EKSAM TINT & STICKERS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Neon glow */
+    .neon-text {
+      color: #fff;
+      text-shadow: 0 0 5px #ff0000, 0 0 10px #ca7676, 
+                   0 0 20px #fa5454, 0 0 40px #f7a8a8;
+    }
+
+    .fade-in {
+      animation: fadeIn 2s ease-in-out forwards;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .glow-card {
+      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid rgba(255, 0, 0, 0.4);
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.8),
+                  0 0 20px rgba(255, 0, 0, 0.5);
+      transition: transform 0.3s ease-in-out;
+    }
+    .glow-card:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body class="bg-black text-white font-sans">
+
+  <!-- Header -->
+  <header class="absolute top-0 left-0 w-full z-50">
+    <div class="flex items-center justify-between px-4 py-4">
+      <h1 class="text-xl md:text-2xl font-bold neon-text">EKSAM TINT</h1>
+      <nav class="hidden md:flex space-x-6 font-semibold">
+        <a href="home.html" class="hover:text-red-400 transition">Home</a>
+        <a href="about.html" class="text-red-500">About</a>
+        <a href="gallery.html" class="hover:text-red-400 transition">Services</a>
+        <a href="contact.html" class="hover:text-red-400 transition">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="h-[60vh] bg-cover bg-center flex items-center justify-center" style="background-image: url('images/1198387.png');">
+    <h2 class="text-4xl md:text-6xl font-bold neon-text fade-in">About Us</h2>
+  </section>
+
+  <!-- About Story -->
+  <section class="py-16 px-6 md:px-20 text-center">
+    <h3 class="text-3xl md:text-4xl font-bold mb-6 neon-text">Who We Are</h3>
+    <p class="max-w-3xl mx-auto text-lg leading-relaxed fade-in">
+      At <span class="text-red-400 font-semibold">EKSAM TINT & STICKERS</span>, we believe your vehicle deserves nothing less than perfection. 
+      Based in <span class="font-bold">Luton</span>, we’ve been transforming cars, homes, and businesses with high-quality 
+      <span class="text-red-400">tinting</span> and <span class="text-red-400">custom signage</span> solutions.  
+      <br><br>
+      Our mission is simple: to combine <span class="font-semibold">style, protection, and innovation</span> so that every client 
+      drives away with 100% satisfaction. Whether it’s <span class="italic">privacy, UV protection, headlight tinting, or custom branding</span>, 
+      our experienced team is here to deliver with precision and care.  
+    </p>
+  </section>
+
+  <!-- Why Choose Us -->
+  <section class="py-16 px-6 md:px-20 bg-gradient-to-r from-black via-gray-900 to-black text-center">
+    <h3 class="text-3xl md:text-4xl font-bold mb-10 neon-text">Why Choose Us?</h3>
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="glow-card p-6 rounded-xl">
+        <h4 class="text-xl font-bold mb-3 text-red-400">Expert Craftsmanship</h4>
+        <p>With over <span class="font-bold">20+ years</span> of combined experience, our team ensures flawless application every time.</p>
+      </div>
+      <div class="glow-card p-6 rounded-xl">
+        <h4 class="text-xl font-bold mb-3 text-red-400">Premium Materials</h4>
+        <p>We use only <span class="font-bold">top-quality films and vinyls</span> designed for durability, clarity, and style.</p>
+      </div>
+      <div class="glow-card p-6 rounded-xl">
+        <h4 class="text-xl font-bold mb-3 text-red-400">100% Satisfaction</h4>
+        <p>Your happiness is our guarantee — we don’t stop until you love the result.</p>
+      </div>
+    </div>
+  </section>
+
+<!-- CONTACT -->
+  <section id="contact" class="py-20 bg-gray-900">
+    <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 px-6 items-center">
+      <div data-aos="fade-right">
+        <h2 class="text-5xl font-bold mb-6">Contact Us</h2>
+        <p class="text-gray-300 mb-4">📍 33 Grasmere Road, Luton LU3 2DT</p>
+        <p class="text-gray-300 mb-4">📞 +44 7774 093433</p>
+        <p class="text-gray-300 mb-4">✉ eksamtint@gmail.com</p>
+      </div>
+      <div data-aos="fade-left">
+        <iframe src="https://www.google.com/maps?q=33+Grasmere+Road+Luton+LU3+2DT&output=embed"
+                class="w-full h-80 rounded-xl shadow-lg"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="py-6 bg-black text-center text-gray-500 text-sm">
+    © 2025 EKSAM TINT & STICKERS. All Rights Reserved.
+  </footer>
+
+  <script>
+    AOS.init({ duration: 1200 });
+  </script>
+
+</body>
+
+</html>
