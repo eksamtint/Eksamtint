@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EKSAM TINT — Admin Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            gray: { 750: '#2d3748', 850: '#1a202c', 950: '#0d1117' },
+            brand: { red: '#ef4444', dark: '#030712' }
+          },
+          fontFamily: { sans: ['Inter', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body { background-color: #030712; color: #e5e7eb; }
+    .glass-panel {
+      background: rgba(17, 24, 39, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .sidebar-link { transition: all 0.2s ease; border-left: 3px solid transparent; }
+    .sidebar-link:hover, .sidebar-link.active {
+      background: rgba(239, 68, 68, 0.1);
+      border-left-color: #ef4444;
+      color: #fff;
+    }
+    .status-badge { @apply px-2 py-0.5 rounded text-xs font-medium uppercase tracking-wide; }
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #111827; }
+    ::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+    
+    /* Animation for notification bell */
+    @keyframes bell-ring {
+      0%, 100% { transform: rotate(0); }
+      10%, 30%, 50%, 70%, 90% { transform: rotate(15deg); }
+      20%, 40%, 60%, 80% { transform: rotate(-15deg); }
+    }
+    .animate-bell { animation: bell-ring 1s ease-in-out; }
+  </style>
+</head>
+<body class="h-screen flex overflow-hidden font-sans antialiased selection:bg-red-500 selection:text-white relative">
+
+  <!-- Mobile Backdrop -->
+  <div id="mobile-backdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-black/80 z-30 hidden md:hidden backdrop-blur-sm transition-opacity"></div>
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-gray-900 border-r border-gray-800 flex-shrink-0 flex flex-col transform -translate-x-full transition-transform duration-300 md:translate-x-0 md:static md:flex">
+    <div class="h-16 flex items-center px-6 border-b border-gray-800 justify-between md:justify-start">
+      <div class="text-xl font-bold tracking-tight text-white">
+        EKSAM <span class="text-red-500">TINT</span>
+      </div>
+      <!-- Close button for mobile -->
+      <button onclick="toggleSidebar()" class="md:hidden text-gray-400 hover:text-white">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <nav class="flex-1 py-6 space-y-1 overflow-y-auto">
+      <p class="px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Main</p>
+      <button onclick="switchTab('dashboard')" id="nav-dashboard" class="sidebar-link active w-full flex items-center px-6 py-3 text-sm font-medium text-gray-400">
+        <i class="fas fa-chart-pie w-5"></i> Dashboard
+      </button>
+      <button onclick="switchTab('queue')" id="nav-queue" class="sidebar-link w-full flex items-center px-6 py-3 text-sm font-medium text-gray-400">
+        <i class="fas fa-list-ul w-5"></i> Queue List
+      </button>
+      
+      <p class="px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-6 mb-2">Schedule</p>
+      <button onclick="switchTab('daily')" id="nav-daily" class="sidebar-link w-full flex items-center px-6 py-3 text-sm font-medium text-gray-400">
+        <i class="far fa-calendar-alt w-5"></i> Daily View
+      </button>
+      <button onclick="switchTab('weekly')" id="nav-weekly" class="sidebar-link w-full flex items-center px-6 py-3 text-sm font-medium text-gray-400">
+        <i class="fas fa-calendar-week w-5"></i> Weekly View
+      </button>
+
+      <p class="px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-6 mb-2">Admin</p>
+      <button onclick="switchTab('add')" id="nav-add" class="sidebar-link w-full flex items-center px-6 py-3 text-sm font-medium text-gray-400">
+        <i class="fas fa-plus-circle w-5"></i> New Booking
+      </button>
+      <button onclick="switchTab('settings')" id="nav-settings" class="sidebar-link w-full flex items-center px-6 py-3 text-sm font-medium text-gray-400">
+        <i class="fas fa-cog w-5"></i> Slots & Settings
+      </button>
+    </nav>
+
+    <div class="p-4 border-t border-gray-800">
+      <button onclick="logout()" class="flex items-center w-full px-4 py-2 text-sm text-gray-400 hover:text-white hover:bg-gray-800 rounded transition-colors">
+        <i class="fas fa-sign-out-alt w-5"></i> Sign Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col min-w-0 bg-[#030712] h-full">
+    
+    <!-- Mobile Header -->
+    <header class="md:hidden flex items-center justify-between h-16 px-4 border-b border-gray-800 bg-gray-900 flex-shrink-0">
+      <div class="flex items-center gap-3">
+        <button onclick="toggleSidebar()" class="text-gray-400 hover:text-white">
+          <i class="fas fa-bars text-xl"></i>
+        </button>
+        <span class="font-bold text-white">EKSAM TINT</span>
+      </div>
+      
+      <!-- Mobile Notifications -->
+      <div class="relative cursor-pointer" onclick="markNotificationsRead()">
+         <i id="notify-bell-mobile" class="fas fa-bell text-gray-400 hover:text-white transition"></i>
+         <span id="notify-badge-mobile" class="hidden absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-gray-900">0</span>
+      </div>
+    </header>
+
+    <!-- Top Bar (Desktop) -->
+    <header class="hidden md:flex h-16 items-center justify-between px-8 border-b border-gray-800 bg-[#030712]/50 backdrop-blur sticky top-0 z-20 flex-shrink-0">
+      <h2 id="page-title" class="text-lg font-medium text-white">Overview</h2>
+      <div class="flex items-center gap-6">
+        
+        <!-- Notifications -->
+        <div class="relative cursor-pointer" onclick="markNotificationsRead()">
+          <i id="notify-bell" class="fas fa-bell text-gray-400 hover:text-white transition text-lg"></i>
+          <span id="notify-badge" class="hidden absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-gray-900">0</span>
+        </div>
+
+        <a href="booking.html" target="_blank" class="text-sm text-gray-400 hover:text-white transition"><i class="fas fa-external-link-alt mr-1"></i> Customer View</a>
+        <div class="h-8 w-8 rounded-full bg-red-600 flex items-center justify-center text-white font-bold text-xs">A</div>
+      </div>
+    </header>
+
+    <!-- Content Area -->
+    <main class="flex-1 overflow-auto p-4 md:p-8 relative w-full">
+      
+      <!-- VIEW: DASHBOARD -->
+      <div id="view-dashboard" class="space-y-6 animate-fade-in pb-20 md:pb-0">
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+          <div class="glass-panel p-6 rounded-xl relative overflow-hidden group">
+            <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition"><i class="fas fa-clock text-6xl text-yellow-500"></i></div>
+            <p class="text-sm font-medium text-gray-400">Pending Queue</p>
+            <p id="statWaiting" class="text-3xl font-bold text-white mt-2">0</p>
+            <div class="mt-2 text-xs text-yellow-500 font-medium">Action Required</div>
+          </div>
+          <div class="glass-panel p-6 rounded-xl relative overflow-hidden group">
+            <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition"><i class="fas fa-check-circle text-6xl text-green-500"></i></div>
+            <p class="text-sm font-medium text-gray-400">Confirmed Bookings</p>
+            <p id="statConfirmed" class="text-3xl font-bold text-white mt-2">0</p>
+            <div class="mt-2 text-xs text-green-500 font-medium">Locked Slots</div>
+          </div>
+          <div class="glass-panel p-6 rounded-xl relative overflow-hidden group">
+            <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition"><i class="fas fa-times-circle text-6xl text-red-500"></i></div>
+            <p class="text-sm font-medium text-gray-400">Rejected / Cancelled</p>
+            <p id="statRejected" class="text-3xl font-bold text-white mt-2">0</p>
+          </div>
+          <div class="glass-panel p-6 rounded-xl relative overflow-hidden group">
+            <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition"><i class="fas fa-users text-6xl text-blue-500"></i></div>
+            <p class="text-sm font-medium text-gray-400">Total Bookings</p>
+            <p id="statTotal" class="text-3xl font-bold text-white mt-2">0</p>
+            <div class="mt-2 text-xs text-blue-500 font-medium">All Time</div>
+          </div>
+        </div>
+
+        <!-- Recent Activity Table -->
+        <div class="glass-panel rounded-xl overflow-hidden">
+          <div class="px-6 py-4 border-b border-gray-800 flex justify-between items-center">
+            <h3 class="font-semibold text-white">Recent Queue Activity</h3>
+            <button onclick="switchTab('queue')" class="text-xs text-red-500 hover:text-red-400 font-medium">View Full Queue</button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-gray-400 min-w-[600px]">
+              <thead class="bg-gray-800/50 text-xs uppercase font-medium text-gray-500">
+                <tr>
+                  <th class="px-6 py-3">Customer</th>
+                  <th class="px-6 py-3">Service</th>
+                  <th class="px-6 py-3">Date</th>
+                  <th class="px-6 py-3">Status</th>
+                  <th class="px-6 py-3 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="dashboardRecentTable" class="divide-y divide-gray-800">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW: QUEUE LIST -->
+      <div id="view-queue" class="hidden space-y-6 pb-20 md:pb-0">
+        <div class="flex flex-col md:flex-row gap-4 justify-between items-center">
+          <div class="relative w-full md:w-96">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500"><i class="fas fa-search"></i></span>
+            <input id="queueSearch" type="text" placeholder="Search customer, phone..." 
+              class="w-full bg-gray-900 border border-gray-800 text-gray-300 text-sm rounded-lg pl-10 p-2.5 focus:ring-red-500 focus:border-red-500 placeholder-gray-600">
+          </div>
+          <div class="flex gap-2 w-full md:w-auto">
+            <select id="queueFilter" class="bg-gray-900 border border-gray-800 text-gray-300 text-sm rounded-lg p-2.5 focus:ring-red-500 focus:border-red-500 w-full md:w-auto">
+              <option value="">All Statuses</option>
+              <option value="waiting">Waiting</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="rejected">Rejected</option>
+            </select>
+            <button onclick="renderQueue()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition whitespace-nowrap">Filter</button>
+          </div>
+        </div>
+
+        <div class="glass-panel rounded-xl overflow-hidden shadow-lg">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-gray-400 min-w-[800px]">
+              <thead class="bg-gray-800/50 text-xs uppercase font-medium text-gray-500">
+                <tr>
+                  <th class="px-6 py-4">Customer Details</th>
+                  <th class="px-6 py-4">Booking Info</th>
+                  <th class="px-6 py-4">Source</th>
+                  <th class="px-6 py-4">Status</th>
+                  <th class="px-6 py-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="queueContainer" class="divide-y divide-gray-800">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW: DAILY -->
+      <div id="view-daily" class="hidden space-y-6 pb-20 md:pb-0">
+        <div class="glass-panel p-4 rounded-xl flex flex-col md:flex-row items-start md:items-center gap-4">
+          <label class="text-sm font-medium text-gray-400">Select Date:</label>
+          <input id="dailyDate" type="date" class="bg-gray-900 border border-gray-800 text-white text-sm rounded-lg p-2 focus:ring-red-500 focus:border-red-500 w-full md:w-auto">
+        </div>
+        <div id="dailyContainer" class="grid grid-cols-1 gap-4">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- VIEW: WEEKLY -->
+      <div id="view-weekly" class="hidden space-y-6 pb-20 md:pb-0">
+        <div class="glass-panel p-6 rounded-xl">
+          <h3 class="text-lg font-medium text-white mb-4">Upcoming 7 Days</h3>
+          <div id="weeklyContainer" class="overflow-x-auto">
+             <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW: SETTINGS / SLOTS -->
+      <div id="view-settings" class="hidden max-w-4xl mx-auto space-y-6 pb-20 md:pb-0">
+        <div class="glass-panel rounded-xl p-8">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+            <div>
+              <h3 class="text-xl font-bold text-white">Slot Capacity & Time Configuration</h3>
+              <p class="text-sm text-gray-500">Manage your daily availability slots here.</p>
+            </div>
+            <button onclick="saveSlotSettings()" class="w-full md:w-auto bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg text-sm px-5 py-2.5 transition shadow-lg shadow-red-900/20">
+              <i class="fas fa-save mr-2"></i> Save Changes
+            </button>
+          </div>
+          
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-gray-400 min-w-[500px]">
+              <thead class="bg-gray-800/50 text-xs uppercase font-medium text-gray-500">
+                <tr>
+                  <th class="px-4 py-3">Slot ID</th>
+                  <th class="px-4 py-3">Time Label</th>
+                  <th class="px-4 py-3">Capacity</th>
+                  <th class="px-4 py-3 text-center">Status</th>
+                </tr>
+              </thead>
+              <tbody id="slotsEditorBody" class="divide-y divide-gray-800">
+                <!-- JS Populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW: ADD BOOKING -->
+      <div id="view-add" class="hidden max-w-2xl mx-auto pb-20 md:pb-0">
+        <div class="glass-panel rounded-xl p-6 md:p-8">
+          <h3 class="text-xl font-bold text-white mb-6">Create New Booking</h3>
+          <form id="manualForm" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block mb-2 text-sm font-medium text-gray-400">Full Name</label>
+                <input name="name" type="text" required class="bg-gray-900 border border-gray-800 text-white text-sm rounded-lg w-full p-2.5 focus:ring-red-500 focus:border-red-500">
+              </div>
+              <div>
+                <label class="block mb-2 text-sm font-medium text-gray-400">Phone Number</label>
+                <input name="mobile" type="tel" required class="bg-gray-900 border border-gray-800 text-white text-sm rounded-lg w-full p-2.5 focus:ring-red-500 focus:border-red-500">
+              </div>
+              <div>
+                <label class="block mb-2 text-sm font-medium text-gray-400">Date</label>
+                <input name="date" type="date" required class="bg-gray-900 border border-gray-800 text-white text-sm rounded-lg w-full p-2.5 focus:ring-red-500 focus:border-red-500">
+              </div>
+              <div>
+                <label class="block mb-2 text-sm font-medium text-gray-400">Time Slot</label>
+                <select name="slotId" required class="bg-gray-900 border border-gray-800 text-white text-sm rounded-lg w-full p-2.5 focus:ring-red-500 focus:border-red-500">
+                  <option value="">Select Slot</option>
+                  <!-- Populated by JS -->
+                </select>
+              </div>
+              <div class="md:col-span-2">
+                <label class="block mb-2 text-sm font-medium text-gray-400">Service Type</label>
+                <select name="service" required class="bg-gray-900 border border-gray-800 text-white text-sm rounded-lg w-full p-2.5 focus:ring-red-500 focus:border-red-500">
+                  <option value="Window Tinting">Window Tinting</option>
+                  <option value="Stickers & Signage">Stickers & Signage</option>
+                  <option value="Car Wrapping">Car Wrapping</option>
+                  <option value="Full Package">Full Package</option>
+                </select>
+              </div>
+              <div class="md:col-span-2">
+                <label class="block mb-2 text-sm font-medium text-gray-400">Source</label>
+                <div class="flex gap-4">
+                  <label class="inline-flex items-center">
+                    <input type="radio" name="source" value="walk-in" checked class="form-radio text-red-600 bg-gray-900 border-gray-800 focus:ring-red-500">
+                    <span class="ml-2 text-gray-300 text-sm">Walk-in</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input type="radio" name="source" value="phone" class="form-radio text-red-600 bg-gray-900 border-gray-800 focus:ring-red-500">
+                    <span class="ml-2 text-gray-300 text-sm">Phone Call</span>
+                  </label>
+                </div>
+              </div>
+              <div class="md:col-span-2">
+                <label class="block mb-2 text-sm font-medium text-gray-400">Notes (Optional)</label>
+                <textarea name="notes" rows="3" class="bg-gray-900 border border-gray-800 text-white text-sm rounded-lg w-full p-2.5 focus:ring-red-500 focus:border-red-500"></textarea>
+              </div>
+            </div>
+            <div class="flex flex-col md:flex-row gap-3 pt-4 border-t border-gray-800">
+              <button type="submit" class="w-full bg-gray-800 text-white hover:bg-gray-700 font-medium rounded-lg text-sm px-5 py-3 transition">Add to Queue</button>
+              <button type="button" onclick="submitAndConfirm()" class="w-full bg-red-600 text-white hover:bg-red-700 font-medium rounded-lg text-sm px-5 py-3 transition shadow-lg shadow-red-900/20">Confirm Immediately</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="fixed bottom-5 right-5 left-5 md:left-auto z-50 transform transition-all duration-300 translate-y-20 opacity-0">
+    <div class="flex items-center p-4 mb-4 rounded-lg shadow bg-gray-800 text-white border border-gray-700" id="toast-bg" role="alert">
+      <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg bg-gray-700 text-white" id="toast-icon">
+        <i class="fas fa-info text-sm"></i>
+      </div>
+      <div class="ml-3 text-sm font-normal" id="toast-message">Notification</div>
+    </div>
+  </div>
+
+  <!-- EMBEDDED BOOKING API -->
+  <script>
+    // Booking API - Backend Logic
+    class BookingSystem {
+      constructor() {
+        this.slots = this.loadSlots();
+        this.bookings = this.loadBookings();
+      }
+
+      loadSlots() {
+        const defaultSlots = [
+          { id: 1, time: "09:00 AM - 11:00 AM", capacity: 3, enabled: true },
+          { id: 2, time: "11:00 AM - 01:00 PM", capacity: 3, enabled: true },
+          { id: 3, time: "01:00 PM - 03:00 PM", capacity: 3, enabled: true },
+          { id: 4, time: "03:00 PM - 05:00 PM", capacity: 3, enabled: true },
+          { id: 5, time: "05:00 PM - 07:00 PM", capacity: 3, enabled: true }
+        ];
+
+        const stored = localStorage.getItem('bookingSlots');
+        return stored ? JSON.parse(stored) : defaultSlots;
+      }
+
+      loadBookings() {
+        const stored = localStorage.getItem('bookings');
+        if (!stored) return [];
+        try {
+          const parsed = JSON.parse(stored);
+          return parsed.map(b => ({
+            phoneVerified: typeof b.phoneVerified === 'boolean' ? b.phoneVerified : false,
+            notes: b.notes || '',
+            source: b.source || b.submissionMethod || 'web',
+            priority: typeof b.priority === 'number' ? b.priority : 0,
+            ...b,
+            status: b.status === 'pending' ? 'waiting' : (b.status || 'waiting')
+          }));
+        } catch (e) {
+          console.error('Failed to parse bookings from storage:', e);
+          return [];
+        }
+      }
+
+      saveSlots() {
+        localStorage.setItem('bookingSlots', JSON.stringify(this.slots));
+      }
+
+      saveBookings() {
+        localStorage.setItem('bookings', JSON.stringify(this.bookings));
+      }
+      
+      refreshData() {
+        this.bookings = this.loadBookings();
+        this.slots = this.loadSlots();
+      }
+
+      // Check if slot is full (only count confirmed bookings)
+      isSlotFull(slotId, date) {
+        const key = `${date}-${slotId}`;
+        const count = this.bookings.filter(b => 
+          b.slotKey === key && 
+          (b.status === 'confirmed' || b.status === 'accepted')
+        ).length;
+        const slot = this.slots.find(s => s.id === slotId);
+        return slot && count >= slot.capacity;
+      }
+
+      // Get slot status (only count confirmed/accepted bookings)
+      getSlotStatus(slotId, date) {
+        const key = `${date}-${slotId}`;
+        const confirmedCount = this.bookings.filter(b => 
+          b.slotKey === key && 
+          (b.status === 'confirmed' || b.status === 'accepted')
+        ).length;
+        const pendingCount = this.bookings.filter(b =>
+          b.slotKey === key &&
+          b.status === 'waiting'
+        ).length;
+        const slot = this.slots.find(s => s.id === slotId);
+        if (!slot || !slot.enabled) return { status: 'disabled', booked: 0, capacity: 0, pending: 0 };
+        return {
+          status: confirmedCount >= slot.capacity ? 'full' : 'available',
+          booked: confirmedCount,
+          pending: pendingCount,
+          capacity: slot.capacity
+        };
+      }
+
+      // Check for double booking
+      checkDoubleBooking(email, date, slotId) {
+        return this.bookings.some(b => 
+          b.email === email && 
+          b.date === date && 
+          b.slotId === slotId && 
+          b.status !== 'cancelled'
+        );
+      }
+
+      // Create booking
+      createBooking(data) {
+        // Prevent double booking
+        if (this.checkDoubleBooking(data.email, data.date, data.slotId)) {
+          return { success: false, message: 'You already have a booking for this slot!' };
+        }
+
+        // Check if slot is full
+        if (this.isSlotFull(data.slotId, data.date)) {
+          return { success: false, message: 'This slot is now full. Please select another time.' };
+        }
+
+        const booking = {
+          id: Date.now(),
+          ...data,
+          phoneVerified: typeof data.phoneVerified === 'boolean' ? data.phoneVerified : false,
+          notes: data.notes || '',
+          source: data.source || data.submissionMethod || 'web',
+          priority: typeof data.priority === 'number' ? data.priority : 0,
+          slotKey: `${data.date}-${data.slotId}`,
+          status: 'waiting',
+          createdAt: new Date().toISOString(),
+          submissionMethod: data.submissionMethod || 'email'
+        };
+
+        this.bookings.push(booking);
+        this.saveBookings();
+        return { success: true, message: 'Booking created successfully!', booking };
+      }
+
+      // Get all bookings
+      getBookings() {
+        return this.bookings;
+      }
+
+      // Get bookings by date
+      getBookingsByDate(date) {
+        return this.bookings.filter(b => b.date === date && b.status !== 'cancelled');
+      }
+
+      // Cancel booking
+      cancelBooking(bookingId) {
+        const booking = this.bookings.find(b => b.id === bookingId);
+        if (booking) {
+          booking.status = 'cancelled';
+          this.saveBookings();
+          return true;
+        }
+        return false;
+      }
+
+      // Admin: Update slot
+      updateSlot(slotId, updates) {
+        const slot = this.slots.find(s => s.id === slotId);
+        if (slot) {
+          Object.assign(slot, updates);
+          this.saveSlots();
+          return true;
+        }
+        return false;
+      }
+      
+      // Update ALL slots (bulk)
+      updateAllSlots(newSlots) {
+        this.slots = newSlots;
+        this.saveSlots();
+        return true;
+      }
+
+      // Admin: Get all slots
+      getAllSlots() {
+        return this.slots;
+      }
+
+      // QUEUE MANAGEMENT METHODS ========================================
+
+      // Get bookings by status
+      getBookingsByStatus(status) {
+        return this.bookings.filter(b => b.status === status).sort((a, b) => 
+          new Date(a.createdAt) - new Date(b.createdAt)
+        );
+      }
+
+      // Get all pending bookings (queue)
+      getPendingQueue() {
+        return this.getBookingsByStatus('waiting');
+      }
+
+      // Accept booking (move to confirmed)
+      acceptBooking(bookingId) {
+        const booking = this.bookings.find(b => b.id === bookingId);
+        if (!booking) return { success: false, message: 'Booking not found' };
+        
+        // Check if slot still has capacity
+        if (this.isSlotFull(booking.slotId, booking.date)) {
+          return { success: false, message: 'Slot is now full. Cannot accept this booking.' };
+        }
+
+        booking.status = 'confirmed';
+        booking.acceptedAt = new Date().toISOString();
+        this.saveBookings();
+        return { success: true, message: 'Booking confirmed!', booking };
+      }
+
+      // Reject booking
+      rejectBooking(bookingId, rejectionReason = '') {
+        const booking = this.bookings.find(b => b.id === bookingId);
+        if (!booking) return { success: false, message: 'Booking not found' };
+        
+        booking.status = 'rejected';
+        booking.rejectionReason = rejectionReason;
+        booking.rejectedAt = new Date().toISOString();
+        this.saveBookings();
+        return { success: true, message: 'Booking rejected!', booking };
+      }
+
+      // Get bookings for admin queue view
+      getQueueStats() {
+        return {
+          pending: this.getPendingQueue().length,
+          confirmed: this.getBookingsByStatus('confirmed').length,
+          rejected: this.getBookingsByStatus('rejected').length,
+          total: this.bookings.filter(b => b.status !== 'cancelled').length
+        };
+      }
+
+      // Get booking details by ID
+      getBookingById(bookingId) {
+        return this.bookings.find(b => b.id === bookingId);
+      }
+
+      // Check waitlist (pending bookings that couldn't be accepted)
+      getWaitlist() {
+        return this.bookings.filter(b => b.status === 'waiting').map(b => ({
+          ...b,
+          queuePosition: this.getPendingQueue().indexOf(b) + 1
+        }));
+      }
+
+      // Get slot availability for a date (considering pending + confirmed)
+      getDetailedSlotStatus(slotId, date) {
+        const key = `${date}-${slotId}`;
+        const confirmed = this.bookings.filter(b => 
+          b.slotKey === key && b.status === 'confirmed'
+        ).length;
+        const accepted = this.bookings.filter(b =>
+          b.slotKey === key && b.status === 'accepted'
+        ).length;
+        const pending = this.bookings.filter(b =>
+          b.slotKey === key && b.status === 'waiting'
+        ).length;
+        const rejected = this.bookings.filter(b =>
+          b.slotKey === key && b.status === 'rejected'
+        ).length;
+        
+        const slot = this.slots.find(s => s.id === slotId);
+        const capacity = slot ? slot.capacity : 0;
+        const locked = confirmed + accepted;
+        const available = capacity - locked;
+
+        return {
+          slotId,
+          date,
+          capacity,
+          confirmed,
+          accepted,
+          pending,
+          rejected,
+          locked,
+          available,
+          canAccept: available > 0,
+          isFull: locked >= capacity
+        };
+      }
+    }
+
+    // Initialize system
+    const bookingSystem = new BookingSystem();
+  </script>
+
+  <script>
+    // ========== UI LOGIC ==========
+    let lastBookingCount = 0;
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check for auth in real app, simulated here
+      populateSlots();
+      setDate('dailyDate', new Date().toISOString().slice(0,10));
+      
+      // Initial Load
+      bookingSystem.refreshData(); // Ensure fresh
+      lastBookingCount = bookingSystem.getBookings().length;
+      updateStats();
+      renderDashboardRecent();
+      renderSettings();
+      
+      // Default view
+      switchTab('dashboard');
+      
+      // Form Listeners
+      document.getElementById('manualForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        submitManualBooking('waiting');
+      });
+      document.getElementById('dailyDate').addEventListener('change', renderDaily);
+      
+      // Listen for updates from Main Page (different tab)
+      window.addEventListener('storage', (e) => {
+        if (e.key === 'bookings') {
+          handleRemoteUpdate();
+        }
+      });
+      
+      // Polling fallback
+      setInterval(() => {
+        const currentCount = JSON.parse(localStorage.getItem('bookings') || '[]').length;
+        if (currentCount !== lastBookingCount) {
+          handleRemoteUpdate();
+        }
+      }, 3000);
+    });
+
+    // Sidebar Toggle
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('mobile-backdrop');
+      
+      // Check if sidebar is currently translated out (hidden on mobile)
+      const isHidden = sidebar.classList.contains('-translate-x-full');
+      
+      if (isHidden) {
+        sidebar.classList.remove('-translate-x-full');
+        backdrop.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        backdrop.classList.add('hidden');
+      }
+    }
+    
+    function handleRemoteUpdate() {
+       bookingSystem.refreshData(); // Reload from storage
+       const newCount = bookingSystem.getBookings().length;
+       
+       if (newCount > lastBookingCount) {
+         showToast('New booking received!', 'success');
+         triggerBellAnimation();
+         incrementBadge();
+       }
+       
+       lastBookingCount = newCount;
+       
+       // Refresh current view if needed
+       if(!document.getElementById('view-dashboard').classList.contains('hidden')) {
+          updateStats();
+          renderDashboardRecent();
+       } else if (!document.getElementById('view-queue').classList.contains('hidden')) {
+          renderQueue();
+       } else if (!document.getElementById('view-daily').classList.contains('hidden')) {
+          renderDaily();
+       }
+    }
+
+    function switchTab(viewId) {
+      // Hide all views
+      ['dashboard', 'queue', 'daily', 'weekly', 'add', 'settings'].forEach(id => {
+        document.getElementById(`view-${id}`).classList.add('hidden');
+        const nav = document.getElementById(`nav-${id}`);
+        if(nav) nav.classList.remove('active', 'text-white');
+      });
+
+      // Show selected
+      document.getElementById(`view-${viewId}`).classList.remove('hidden');
+      const activeNav = document.getElementById(`nav-${viewId}`);
+      if(activeNav) activeNav.classList.add('active', 'text-white');
+
+      // Update Header Title
+      const titles = {
+        'dashboard': 'Dashboard Overview',
+        'queue': 'Booking Queue',
+        'daily': 'Daily Schedule',
+        'weekly': 'Weekly Overview',
+        'add': 'Manual Booking',
+        'settings': 'Slots & Settings'
+      };
+      document.getElementById('page-title').textContent = titles[viewId];
+      
+      // Auto-close sidebar on mobile if open
+      const sidebar = document.getElementById('sidebar');
+      if (!sidebar.classList.contains('-translate-x-full') && window.innerWidth < 768) {
+          toggleSidebar();
+      }
+
+      // Trigger specific renders
+      if(viewId === 'queue') renderQueue();
+      if(viewId === 'daily') renderDaily();
+      if(viewId === 'weekly') renderWeekly();
+      if(viewId === 'dashboard') { updateStats(); renderDashboardRecent(); }
+      if(viewId === 'settings') renderSettings();
+    }
+    
+    // ========== SETTINGS RENDERER ==========
+    function renderSettings() {
+      const slots = bookingSystem.getAllSlots();
+      const tbody = document.getElementById('slotsEditorBody');
+      
+      tbody.innerHTML = slots.map(slot => `
+        <tr class="border-b border-gray-800 last:border-0 hover:bg-gray-800/20">
+          <td class="px-4 py-3 text-gray-500 font-mono">#${slot.id}</td>
+          <td class="px-4 py-3">
+             <input type="text" id="slot-time-${slot.id}" value="${slot.time}" 
+               class="bg-gray-900 border border-gray-700 rounded px-2 py-1 text-white text-sm w-full focus:ring-1 focus:ring-red-500">
+          </td>
+          <td class="px-4 py-3">
+             <input type="number" id="slot-cap-${slot.id}" value="${slot.capacity}" min="0" 
+               class="bg-gray-900 border border-gray-700 rounded px-2 py-1 text-white text-sm w-20 focus:ring-1 focus:ring-red-500">
+          </td>
+          <td class="px-4 py-3 text-center">
+             <label class="inline-flex items-center cursor-pointer">
+               <input type="checkbox" id="slot-enabled-${slot.id}" ${slot.enabled ? 'checked' : ''} class="sr-only peer">
+               <div class="relative w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-red-600"></div>
+             </label>
+          </td>
+        </tr>
+      `).join('');
+    }
+    
+    function saveSlotSettings() {
+      const slots = bookingSystem.getAllSlots();
+      const updatedSlots = slots.map(slot => {
+        const timeVal = document.getElementById(`slot-time-${slot.id}`).value;
+        const capVal = parseInt(document.getElementById(`slot-cap-${slot.id}`).value);
+        const enabledVal = document.getElementById(`slot-enabled-${slot.id}`).checked;
+        
+        return { ...slot, time: timeVal, capacity: capVal, enabled: enabledVal };
+      });
+      
+      bookingSystem.updateAllSlots(updatedSlots);
+      showToast('Slot configuration saved!', 'success');
+    }
+
+    // ========== RENDERERS ==========
+
+    function updateStats() {
+      const stats = bookingSystem.getQueueStats();
+      // Animate numbers (simple implementation)
+      document.getElementById('statWaiting').textContent = stats.pending;
+      document.getElementById('statConfirmed').textContent = stats.confirmed;
+      document.getElementById('statRejected').textContent = stats.rejected;
+      document.getElementById('statTotal').textContent = stats.total;
+    }
+
+    function renderDashboardRecent() {
+      const bookings = bookingSystem.getBookings().slice(-5).reverse(); // Last 5
+      const container = document.getElementById('dashboardRecentTable');
+      
+      if(bookings.length === 0) {
+        container.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">No recent activity</td></tr>';
+        return;
+      }
+
+      container.innerHTML = bookings.map(b => `
+        <tr class="hover:bg-gray-800/30 transition border-b border-gray-800 last:border-0">
+          <td class="px-6 py-4 font-medium text-white whitespace-nowrap">${b.name}</td>
+          <td class="px-6 py-4 whitespace-nowrap">${b.service}</td>
+          <td class="px-6 py-4 text-xs whitespace-nowrap">${b.date}</td>
+          <td class="px-6 py-4">${getStatusBadge(b.status)}</td>
+          <td class="px-6 py-4 text-right">
+            <button onclick="switchTab('queue')" class="text-gray-400 hover:text-white"><i class="fas fa-arrow-right"></i></button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderQueue() {
+      const search = (document.getElementById('queueSearch')?.value || '').toLowerCase();
+      const filterStatus = document.getElementById('queueFilter')?.value || '';
+      
+      let bookings = bookingSystem.getBookings();
+      // Calculate queue positions before filtering
+      const pendingQueue = bookings.filter(b => b.status === 'waiting' || b.status === 'pending');
+      
+      bookings = bookings.filter(b => {
+        const matchSearch = !search || 
+          b.name.toLowerCase().includes(search) ||
+          (b.mobile && b.mobile.includes(search)) ||
+          (b.email && b.email.toLowerCase().includes(search));
+        const matchStatus = !filterStatus || b.status === filterStatus;
+        return matchSearch && matchStatus && b.status !== 'cancelled';
+      });
+
+      const container = document.getElementById('queueContainer');
+      if (bookings.length === 0) {
+        container.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">No bookings found matching criteria.</td></tr>';
+        return;
+      }
+
+      container.innerHTML = bookings.map(b => {
+        let queueBadge = '';
+        if (b.status === 'waiting' || b.status === 'pending') {
+           const pos = pendingQueue.findIndex(p => p.id === b.id) + 1;
+           queueBadge = `<span class="ml-2 text-[10px] bg-blue-900 text-blue-300 px-1.5 py-0.5 rounded border border-blue-800">Queue #${pos}</span>`;
+        }
+
+        return `
+        <tr class="hover:bg-gray-800/30 transition group">
+          <td class="px-6 py-4 min-w-[200px]">
+            <div class="font-medium text-white flex items-center flex-wrap gap-2">${b.name} ${queueBadge}</div>
+            <div class="text-xs text-gray-500 mt-0.5"><i class="fas fa-phone-alt mr-1"></i> ${b.mobile}</div>
+            <div class="text-xs text-gray-500">${b.email}</div>
+          </td>
+          <td class="px-6 py-4 min-w-[200px]">
+             <div class="text-gray-300">${b.service}</div>
+             <div class="text-xs text-gray-500 mt-0.5"><i class="far fa-calendar mr-1"></i> ${b.date} • ${b.time}</div>
+             ${b.notes ? `<div class="mt-1 text-xs text-yellow-500/80 italic"><i class="fas fa-sticky-note mr-1"></i> ${b.notes}</div>` : ''}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+             <span class="text-xs px-2 py-1 rounded bg-gray-800 text-gray-400 border border-gray-700">${b.source || 'web'}</span>
+             <button onclick="togglePhoneVerified(${b.id})" class="ml-2 text-xs ${b.phoneVerified ? 'text-blue-400' : 'text-gray-600 hover:text-gray-400'}" title="Toggle Verification">
+               <i class="fas fa-check-circle"></i>
+             </button>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            ${getStatusBadge(b.status)}
+          </td>
+          <td class="px-6 py-4 text-right whitespace-nowrap min-w-[120px]">
+            ${b.status === 'waiting' || b.status === 'pending' ? `
+              <div class="flex justify-end gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                <button onclick="acceptBooking(${b.id})" class="p-2 rounded-lg bg-green-900/50 text-green-400 hover:bg-green-900 hover:text-white border border-green-900 transition" title="Accept">
+                  <i class="fas fa-check"></i>
+                </button>
+                <button onclick="rejectBooking(${b.id})" class="p-2 rounded-lg bg-red-900/50 text-red-400 hover:bg-red-900 hover:text-white border border-red-900 transition" title="Reject">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            ` : '<span class="text-xs text-gray-600 italic">No actions</span>'}
+          </td>
+        </tr>
+      `}).join('');
+    }
+
+    function renderDaily() {
+      const date = document.getElementById('dailyDate')?.value || new Date().toISOString().slice(0,10);
+      const slots = bookingSystem.getAllSlots();
+      const container = document.getElementById('dailyContainer');
+      
+      let html = '';
+      slots.forEach(slot => {
+        const status = bookingSystem.getDetailedSlotStatus(slot.id, date);
+        const bookings = bookingSystem.getBookings().filter(b => 
+          b.slotKey === `${date}-${slot.id}` && b.status !== 'cancelled'
+        );
+
+        const isFull = status.isFull;
+        const barColor = isFull ? 'border-red-500' : (bookings.length > 0 ? 'border-green-500' : 'border-gray-700');
+        const bgClass = bookings.length > 0 ? 'bg-gray-800/40' : 'bg-gray-800/20';
+
+        html += `
+          <div class="glass-panel border-l-4 ${barColor} p-4 rounded-r-lg ${bgClass}">
+            <div class="flex justify-between items-start">
+              <div>
+                <h4 class="text-lg font-medium text-white">${slot.time}</h4>
+                <div class="text-xs text-gray-500 mt-1 uppercase tracking-wider">Capacity: ${status.confirmed}/${status.capacity}</div>
+              </div>
+              ${isFull 
+                ? '<span class="px-2 py-1 bg-red-900/30 text-red-500 text-xs font-bold rounded uppercase">Full</span>' 
+                : '<span class="px-2 py-1 bg-green-900/30 text-green-500 text-xs font-bold rounded uppercase">Open</span>'
+              }
+            </div>
+            
+            <div class="mt-4 space-y-2">
+              ${bookings.length > 0 ? bookings.map(b => `
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-2 rounded bg-gray-900/50 border border-gray-700/50 gap-2">
+                  <div class="flex items-center gap-3">
+                    <div class="h-8 w-8 rounded-full bg-gray-800 flex items-center justify-center text-xs font-bold text-gray-400 flex-shrink-0">
+                      ${b.name.charAt(0)}
+                    </div>
+                    <div>
+                      <div class="text-sm text-gray-200 font-medium">${b.name}</div>
+                      <div class="text-xs text-gray-500">${b.service}</div>
+                    </div>
+                  </div>
+                  ${getStatusBadge(b.status)}
+                </div>
+              `).join('') : '<div class="text-sm text-gray-600 italic py-2">No bookings for this slot</div>'}
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function renderWeekly() {
+      const today = new Date();
+      const dates = [];
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(today);
+        d.setDate(today.getDate() + i);
+        dates.push(d.toISOString().slice(0,10));
+      }
+
+      const slots = bookingSystem.getAllSlots();
+      // Using a table for better alignment in weekly view
+      let html = '<table class="w-full text-left border-collapse min-w-[800px]">';
+      
+      // Header Row
+      html += '<thead><tr><th class="p-3 border-b border-gray-700 bg-gray-800/50 text-xs text-gray-400 sticky top-0 left-0 z-10">Time Slot</th>';
+      dates.forEach(d => {
+        const dayName = new Date(d).toLocaleDateString('en-US', { weekday: 'short' });
+        const dayNum = d.slice(8);
+        html += `<th class="p-3 border-b border-gray-700 bg-gray-800/50 text-center min-w-[100px]">
+          <div class="text-xs text-gray-500 uppercase">${dayName}</div>
+          <div class="text-sm font-bold text-white">${dayNum}</div>
+        </th>`;
+      });
+      html += '</tr></thead><tbody>';
+
+      slots.forEach(slot => {
+        html += `<tr class="border-b border-gray-800 hover:bg-white/5">
+          <td class="p-3 text-xs font-medium text-gray-400 bg-gray-900/50 sticky left-0 border-r border-gray-800 whitespace-nowrap">${slot.time}</td>`;
+        
+        dates.forEach(date => {
+          const status = bookingSystem.getDetailedSlotStatus(slot.id, date);
+          // Color coding cells
+          let cellClass = 'bg-transparent text-gray-600';
+          let content = '-';
+          
+          if (status.isFull) {
+            cellClass = 'bg-red-900/20 text-red-500 font-bold';
+            content = 'FULL';
+          } else if (status.confirmed > 0) {
+            cellClass = 'bg-green-900/10 text-green-400';
+            content = `${status.confirmed}/${status.capacity}`;
+          }
+
+          html += `<td class="p-3 text-center text-xs ${cellClass} border-r border-gray-800/30 transition hover:bg-white/10 cursor-default">
+            ${content}
+          </td>`;
+        });
+        html += '</tr>';
+      });
+
+      html += '</tbody></table>';
+      document.getElementById('weeklyContainer').innerHTML = html;
+    }
+
+    // ========== HELPERS ==========
+
+    function getStatusBadge(status) {
+      const classes = {
+        'waiting': 'bg-yellow-900/30 text-yellow-500 border-yellow-900',
+        'pending': 'bg-yellow-900/30 text-yellow-500 border-yellow-900',
+        'confirmed': 'bg-green-900/30 text-green-500 border-green-900',
+        'rejected': 'bg-red-900/30 text-red-500 border-red-900',
+        'cancelled': 'bg-gray-800 text-gray-500 border-gray-700'
+      };
+      const cls = classes[status] || classes['cancelled'];
+      return `<span class="status-badge border ${cls}">${status}</span>`;
+    }
+
+    function showToast(msg, type = 'success') {
+      const toast = document.getElementById('toast');
+      const bg = document.getElementById('toast-bg');
+      const icon = document.getElementById('toast-icon');
+      
+      document.getElementById('toast-message').textContent = msg;
+      
+      if (type === 'error') {
+         bg.classList.replace('text-green-400', 'text-red-400');
+         icon.classList.replace('bg-green-800', 'bg-red-800');
+         icon.classList.replace('text-green-200', 'text-red-200');
+         icon.innerHTML = '<i class="fas fa-times text-sm"></i>';
+      } else {
+         // Reset to green defaults (simplified)
+         // For now just white/gray dark mode style
+         bg.classList.replace('text-red-400', 'text-green-400');
+         icon.classList.replace('bg-red-800', 'bg-green-800');
+         icon.classList.replace('text-red-200', 'text-green-200');
+         icon.innerHTML = '<i class="fas fa-check text-sm"></i>';
+      }
+
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3000);
+    }
+    
+    // Notification Logic
+    function triggerBellAnimation() {
+      const bells = document.querySelectorAll('.fa-bell');
+      bells.forEach(bell => {
+          bell.classList.add('animate-bell');
+          setTimeout(() => bell.classList.remove('animate-bell'), 1000);
+      });
+    }
+    
+    function incrementBadge() {
+       const badges = [document.getElementById('notify-badge'), document.getElementById('notify-badge-mobile')];
+       badges.forEach(badge => {
+           if(badge) {
+               let count = parseInt(badge.textContent) || 0;
+               badge.textContent = count + 1;
+               badge.classList.remove('hidden');
+           }
+       });
+    }
+    
+    function markNotificationsRead() {
+       const badges = [document.getElementById('notify-badge'), document.getElementById('notify-badge-mobile')];
+       badges.forEach(badge => {
+           if(badge) {
+               badge.textContent = '0';
+               badge.classList.add('hidden');
+           }
+       });
+    }
+
+    // ========== ACTIONS (Calling booking-api.js) ==========
+
+    function populateSlots() {
+      const slots = bookingSystem.getAllSlots();
+      const sel = document.querySelector('select[name="slotId"]');
+      if(sel) {
+        sel.innerHTML = '<option value="">Select Slot</option>';
+        slots.forEach(s => {
+          const opt = document.createElement('option');
+          opt.value = s.id;
+          opt.text = `${s.time} (${s.enabled ? 'Active' : 'Disabled'})`;
+          sel.appendChild(opt);
+        });
+      }
+    }
+
+    function submitManualBooking(status) {
+      const form = document.getElementById('manualForm');
+      const fd = new FormData(form);
+      const data = Object.fromEntries(fd.entries());
+      data.slotId = Number(data.slotId);
+      data.email = data.mobile + '@manual.entry'; // Placeholder email
+      data.submissionMethod = data.source || 'walk-in';
+      
+      const res = bookingSystem.createBooking(data);
+      if (!res.success) {
+        showToast(res.message, 'error');
+        return;
+      }
+
+      if (status === 'confirmed') {
+        bookingSystem.acceptBooking(res.booking.id);
+        showToast('Booking created and confirmed successfully');
+      } else {
+        showToast('Booking added to queue');
+      }
+
+      form.reset();
+      switchTab('queue');
+    }
+
+    function submitAndConfirm() {
+      submitManualBooking('confirmed');
+    }
+
+    function acceptBooking(id) {
+      const res = bookingSystem.acceptBooking(id);
+      if (res.success) {
+        showToast('Booking confirmed');
+        renderQueue();
+        updateStats();
+      } else {
+        showToast(res.message, 'error');
+      }
+    }
+
+    function rejectBooking(id) {
+      if(confirm('Are you sure you want to reject this booking?')) {
+        bookingSystem.rejectBooking(id, 'Admin rejected');
+        showToast('Booking rejected');
+        renderQueue();
+        updateStats();
+      }
+    }
+
+    function togglePhoneVerified(id) {
+      const b = bookingSystem.getBookingById(id);
+      if (b) {
+        b.phoneVerified = !b.phoneVerified;
+        bookingSystem.saveBookings();
+        renderQueue();
+      }
+    }
+
+    function setDate(id, val) {
+      const el = document.getElementById(id);
+      if(el) el.value = val;
+    }
+
+    function logout() {
+      if(confirm('Logout of Admin Panel?')) {
+        localStorage.removeItem('adminLoggedIn');
+        window.location.href = 'index.html'; // Or reload
+      }
+    }
+  </script>
+</body>
+</html>

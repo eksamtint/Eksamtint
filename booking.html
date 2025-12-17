@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Booking | EKSAM TINT & STICKERS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .fade-in { animation: fadeIn 1s ease-in-out forwards; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .glow {
+      animation: glow 2s infinite alternate;
+    }
+    @keyframes glow {
+      from { text-shadow: 0 0 5px #f87171, 0 0 10px #f87171; }
+      to { text-shadow: 0 0 15px #f87171, 0 0 25px #f87171; }
+    }
+  </style>
+</head>
+<body class="bg-black text-white font-sans">
+
+  <!-- Header -->
+  <header class="fixed top-0 left-0 w-full z-50 bg-black/80 backdrop-blur-md shadow-lg">
+    <div class="flex items-center justify-between px-4 py-4">
+      <h1 class="text-xl md:text-2xl font-bold text-red-500">EKSAM TINT</h1>
+      <nav class="hidden md:flex space-x-6 font-semibold">
+        <a href="index.html" class="hover:text-red-400 transition">Home</a>
+        <a href="about.html" class="hover:text-red-400 transition">About</a>
+        <a href="gallery.html" class="hover:text-red-400 transition">Gallery</a>
+        <a href="booking.html" class="text-red-500">Booking</a>
+        <a href="contact.html" class="hover:text-red-400 transition">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="h-[40vh] bg-cover bg-center flex items-center justify-center" style="background-image: url('images/1198387.png');">
+    <h2 class="text-4xl md:text-5xl font-bold text-red-500 fade-in glow">Book Your Appointment</h2>
+  </section>
+
+  <!-- Booking Form -->
+  <section class="py-16 px-6 md:px-20">
+    <h3 class="text-3xl md:text-4xl font-bold text-center mb-8 text-red-400">Fill Out the Form</h3>
+    
+    <!-- Booking Form -->
+    <form id="bookingForm" class="max-w-2xl mx-auto bg-gray-900/80 p-8 rounded-2xl shadow-lg space-y-6 fade-in">
+      <!-- Name -->
+      <div>
+        <label class="block mb-2 font-semibold">Full Name</label>
+        <input type="text" name="name" required class="w-full p-3 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="Your Name">
+      </div>
+      
+      <!-- Email -->
+      <div>
+        <label class="block mb-2 font-semibold">Email</label>
+        <input type="email" name="email" required class="w-full p-3 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="your@email.com">
+      </div>
+
+      <!-- Mobile Number -->
+      <div>
+        <label class="block mb-2 font-semibold">Mobile Number</label>
+        <input type="tel" name="mobile" required placeholder="+1 (555) 123-4567" class="w-full p-3 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-red-500" pattern="[0-9\s\-\+\(\)]+">
+        <small class="text-gray-400">We'll send confirmation via SMS/WhatsApp</small>
+      </div>
+
+      <!-- Date -->
+      <div>
+        <label class="block mb-2 font-semibold">Preferred Date</label>
+        <input type="date" name="date" required class="w-full p-3 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-red-500">
+      </div>
+
+      <!-- Time Slot -->
+      <div>
+        <label class="block mb-2 font-semibold">Preferred Time</label>
+        <div id="timeSlotsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <!-- Slots will be populated here -->
+        </div>
+        <input type="hidden" name="time" id="selectedSlot" required>
+      </div>
+
+      <!-- Service -->
+      <div>
+        <label class="block mb-2 font-semibold">Service</label>
+        <select name="service" required class="w-full p-3 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-red-500">
+          <option value="">Select a Service</option>
+          <option>Window Tinting</option>
+          <option>Stickers & Signage</option>
+          <option>Headlight Tinting</option>
+          <option>Chameleon Tint</option>
+          <option>Window Screening</option>
+          <option>Car Wrapping</option>
+          <option>Full Package</option>
+        </select>
+      </div>
+
+      <!-- Message -->
+      <div>
+        <label class="block mb-2 font-semibold">Additional Message</label>
+        <textarea name="message" rows="4" class="w-full p-3 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="Any special requests..."></textarea>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="flex justify-center">
+        <button type="submit" class="w-full md:w-1/2 py-3 bg-red-600 hover:bg-red-700 rounded-lg font-semibold transition text-lg">
+          ✅ Submit Now
+        </button>
+      </div>
+      
+      <!-- Submission Method (Hidden by default) -->
+      <input type="hidden" name="submissionMethod" id="submissionMethod" value="email">
+    </form>
+  </section>
+
+  <!-- Back Button -->
+  <section class="text-center py-10">
+    <a href="index.html" class="px-6 py-3 bg-gray-700 hover:bg-gray-800 rounded-lg font-semibold transition inline-block">
+      ⬅ Back to Home
+    </a>
+  </section>
+
+  <!-- JavaScript -->
+  <script src="booking-api.js"></script>
+  <script>
+  // Global variable for selected slot
+  let selectedSlotData = null;
+
+  // Initialize when page loads
+  document.addEventListener('DOMContentLoaded', function() {
+    renderTimeSlots();
+    setupFormValidation();
+  });
+
+  // Render time slots based on selected date
+  function renderTimeSlots() {
+    const dateInput = document.querySelector('input[name="date"]');
+    const container = document.getElementById('timeSlotsContainer');
+    
+    dateInput.addEventListener('change', function() {
+      const selectedDate = this.value;
+      container.innerHTML = '';
+      
+      if (!selectedDate) {
+        container.innerHTML = '<p class="text-gray-400 col-span-2">Select a date first</p>';
+        return;
+      }
+
+      bookingSystem.getAllSlots().forEach(slot => {
+        if (!slot.enabled) return;
+
+        const status = bookingSystem.getSlotStatus(slot.id, selectedDate);
+        const isDisabled = status.status === 'full' || status.status === 'disabled';
+        
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = `p-4 rounded-lg font-semibold transition border-2 ${
+          isDisabled 
+            ? 'bg-gray-600 border-gray-500 text-gray-400 cursor-not-allowed opacity-50'
+            : 'bg-gray-800 border-red-500 hover:border-red-600 hover:bg-red-900/30 cursor-pointer'
+        }`;
+        
+        button.innerHTML = `
+          <div>${slot.time}</div>
+          <div class="text-sm mt-1 ${status.status === 'full' ? 'text-red-400' : 'text-green-400'}">
+            ${status.status === 'full' ? '❌ SLOT FULL' : `✅ Available (${status.booked}/${status.capacity})`}
+          </div>
+        `;
+
+        if (!isDisabled) {
+          button.onclick = (e) => {
+            e.preventDefault();
+            selectSlot(slot.id, slot.time, button);
+          };
+        }
+
+        container.appendChild(button);
+      });
+    });
+
+    // Load slots if date is already selected
+    if (dateInput.value) {
+      dateInput.dispatchEvent(new Event('change'));
+    }
+  }
+
+  // Select a time slot
+  function selectSlot(slotId, slotTime, button) {
+    // Remove previous selection
+    document.querySelectorAll('#timeSlotsContainer button').forEach(btn => {
+      btn.classList.remove('border-red-400', 'bg-red-900/50');
+    });
+
+    // Mark selected
+    button.classList.add('border-red-400', 'bg-red-900/50');
+    
+    // Store selection
+    selectedSlotData = { id: slotId, time: slotTime };
+    document.getElementById('selectedSlot').value = slotTime;
+  }
+
+  // Setup form validation
+  function setupFormValidation() {
+    const form = document.getElementById('bookingForm');
+    
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const formData = getFormData();
+
+      // Validate all fields
+      if (!formData.name || !formData.email || !formData.date || !formData.service) {
+        alert('⚠️ Please fill all required fields!');
+        return;
+      }
+
+      if (!selectedSlotData) {
+        alert('⚠️ Please select a time slot!');
+        return;
+      }
+
+      // Check for double booking
+      if (bookingSystem.checkDoubleBooking(formData.email, formData.date, selectedSlotData.id)) {
+        alert('❌ You already have a booking for this slot! Please select another time.');
+        return;
+      }
+
+      // Create booking
+      const bookingData = {
+        name: formData.name,
+        email: formData.email,
+        mobile: formData.mobile,
+        date: formData.date,
+        slotId: selectedSlotData.id,
+        time: selectedSlotData.time,
+        service: formData.service,
+        message: formData.message,
+        submissionMethod: 'email'
+      };
+
+      const result = bookingSystem.createBooking(bookingData);
+
+      if (result.success) {
+        // Show pending status message
+        const pendingMessage = `
+✅ BOOKING REQUEST RECEIVED!
+
+Your booking request is received and waiting for approval.
+
+📋 Booking Details:
+• Date: ${formData.date}
+• Time: ${formData.time}
+• Service: ${formData.service}
+• Status: PENDING (Waiting for admin approval)
+
+📱 You will receive an SMS/WhatsApp confirmation once admin approves.
+
+Thank you for choosing EKSAM TINT!
+        `;
+        
+        alert(pendingMessage);
+        
+        // Send to Web3Forms for email backup
+        sendToEmail(formData);
+        
+        // Reset form
+        form.reset();
+        document.getElementById('timeSlotsContainer').innerHTML = '';
+        selectedSlotData = null;
+      } else {
+        alert('❌ ' + result.message);
+      }
+    });
+  }
+
+  function getFormData() {
+    return {
+      name: document.querySelector('input[name="name"]').value.trim(),
+      email: document.querySelector('input[name="email"]').value.trim(),
+      mobile: document.querySelector('input[name="mobile"]').value.trim(),
+      date: document.querySelector('input[name="date"]').value.trim(),
+      time: selectedSlotData ? selectedSlotData.time : '',
+      service: document.querySelector('select[name="service"]').value.trim(),
+      message: document.querySelector('textarea[name="message"]').value.trim()
+    };
+  }
+
+  // ✅ Send Email via Web3Forms
+  function sendToEmail(data) {
+    const formData = new FormData();
+    formData.append('access_key', '877bfeb6-8dce-4b84-a9f6-23c6d35fc948');
+    formData.append('subject', 'New Booking Request - EKSAM TINT');
+    formData.append('from_name', data.name);
+    formData.append('email', data.email);
+    formData.append('message', `
+Date: ${data.date}
+Time: ${data.time}
+Service: ${data.service}
+Message: ${data.message}
+    `);
+
+    fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        console.log("✅ Confirmation email sent!");
+      }
+    })
+    .catch(err => console.error("Error: " + err));
+  }
+  </script>
+</body>
+</html>
